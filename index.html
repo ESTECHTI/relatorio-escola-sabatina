@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#512b75">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Relatório Escola Sabatina</title>
+<style>
+:root{--p:#512b75;--p2:#71469a;--bg:#f6f4f8;--card:#fff;--text:#29252d;--muted:#6d6671;--ok:#e8f5e9}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,var(--p),var(--p2));color:white;padding:22px 18px 18px;position:sticky;top:0;z-index:3}
+header h1{font-size:21px;margin:0}.sub{opacity:.9;font-size:13px;margin-top:4px}
+main{max-width:720px;margin:auto;padding:14px 14px 90px}.card{background:var(--card);border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 4px 18px #00000010}
+h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:16px 0 8px}
+button,.btn{border:0;border-radius:13px;padding:13px 14px;font-weight:700;font-size:15px;cursor:pointer}
+.primary{background:var(--p);color:white}.secondary{background:#eee8f3;color:var(--p)}.danger{background:#ffebee;color:#a21c2b}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+input,select{width:100%;padding:12px;border:1px solid #ddd4e4;border-radius:12px;font-size:16px;background:white}
+.row{display:grid;grid-template-columns:1fr 105px;gap:10px;align-items:center;margin:9px 0}.row label{font-size:14px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kpi{background:var(--ok);border-radius:14px;padding:13px}.kpi b{font-size:24px;display:block}
+nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #eee;display:flex;justify-content:center;z-index:4}
+nav div{max-width:720px;width:100%;display:grid;grid-template-columns:repeat(4,1fr)}
+nav button{background:white;color:#5f5863;border-radius:0;font-size:12px;padding:11px 3px}.hidden{display:none!important}
+.item{display:flex;gap:8px;align-items:center;border-bottom:1px solid #eee;padding:9px 0}.item span{flex:1}
+.note{font-size:12px;color:var(--muted)}.bar{height:10px;background:#eee;border-radius:10px;overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;background:var(--p)}
+@media print{header,nav,.no-print{display:none}main{padding:0}.card{box-shadow:none;border:1px solid #ddd}}
+</style>
+</head>
+<body>
+<header><h1>📖 Relatório Escola Sabatina</h1><div class="sub">Relatórios trimestrais • uso simples no celular</div></header>
+<main>
+<section id="home">
+ <div class="card"><h2>Novo / editar relatório</h2>
+  <div class="grid"><select id="mes"></select><input id="ano" type="number" value="2026"></div>
+  <p class="note">Os dados ficam salvos neste aparelho.</p>
+  <div class="actions"><button class="primary" onclick="go('form')">📝 Preencher relatório</button><button class="secondary" onclick="go('dash')">📊 Dashboard</button></div>
+ </div>
+ <div class="card"><h2>Atalhos</h2><div class="grid"><button class="secondary" onclick="go('history')">📁 Histórico</button><button class="secondary" onclick="go('settings')">⚙️ Nomes</button></div></div>
+</section>
+
+<section id="form" class="hidden">
+ <div class="card"><h2 id="formTitle">Relatório</h2><div id="questions"></div>
+ <div class="actions no-print"><button class="primary" onclick="saveReport()">💾 Salvar</button><button class="secondary" onclick="go('dash')">📊 Dashboard</button></div></div>
+</section>
+
+<section id="dash" class="hidden">
+ <div class="card"><h2>📊 Dashboard</h2><div id="kpis" class="kpis"></div></div>
+ <div class="card"><h2>Presença por classe/unidade</h2><div id="bars"></div></div>
+ <div class="card no-print"><div class="actions"><button class="primary" onclick="window.print()">📄 Gerar / salvar PDF</button><button class="secondary" onclick="shareSummary()">📤 Compartilhar resumo</button></div></div>
+</section>
+
+<section id="history" class="hidden"><div class="card"><h2>📁 Relatórios salvos</h2><div id="historyList"></div></div></section>
+
+<section id="settings" class="hidden"><div class="card"><h2>⚙️ Classes e unidades</h2><p class="note">Você pode editar, adicionar ou excluir os nomes.</p><div id="names"></div>
+<div class="row"><input id="newName" placeholder="Novo nome"><button class="primary" onclick="addName()">+ Adicionar</button></div></div></section>
+</main>
+<nav><div><button onclick="go('home')">🏠<br>Início</button><button onclick="go('form')">📝<br>Relatório</button><button onclick="go('dash')">📊<br>Painel</button><button onclick="go('settings')">⚙️<br>Nomes</button></div></nav>
+<script>
+const Q=[
+"1. Número de unidades de ação (classes)",
+"2. Número de alunos da Escola Sabatina",
+"3. Número de alunos presentes",
+"4. Pessoas que têm sua lição da Escola Sabatina",
+"5. Alunos que estudam diariamente a lição",
+"6. Pessoas que participam de pequeno grupo",
+"7. Visitas aos alunos e recém-chegados no trimestre",
+"8. Número de pequenos grupos",
+"9. Reuniões em pequenos grupos durante o trimestre",
+"10. Ações missionárias da unidade de ação no trimestre",
+"11. Pessoas levadas ao batismo por influência da unidade de ação",
+"12. Alunos que estão dando estudos bíblicos",
+"13. Pessoas que participam da Classe de Professores"
+];
+const initial=["Rol","Jardim","Primários","Adolescentes","Jovens","Altemar","Anderson","Gilmar","Luciana"];
+let names=JSON.parse(localStorage.getItem("es_names")||"null")||initial;
+const months=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+mes.innerHTML=months.map((m,i)=>`<option value="${i+1}" ${i===7?"selected":""}>${m}</option>`).join("");
+function key(){return `es_report_${ano.value}_${mes.value}`}
+function getReport(){return JSON.parse(localStorage.getItem(key())||"{}")}
+function go(id){document.querySelectorAll("main section").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");if(id==="form")renderForm();if(id==="dash")renderDash();if(id==="settings")renderNames();if(id==="history")renderHistory();scrollTo(0,0)}
+function renderForm(){
+ const r=getReport();formTitle.textContent=`${months[mes.value-1]} de ${ano.value}`;
+ questions.innerHTML=Q.map((q,qi)=>`<div><h3>${q}</h3>${names.map(n=>`<div class="row"><label>${n}</label><input inputmode="numeric" type="number" min="0" data-q="${qi}" data-n="${esc(n)}" value="${(r[qi]&&r[qi][n])??""}" placeholder="0"></div>`).join("")}</div>`).join("");
+}
+function saveReport(){
+ let r={};document.querySelectorAll("#questions input").forEach(i=>{let q=i.dataset.q,n=i.dataset.n;if(!r[q])r[q]={};if(i.value!=="")r[q][n]=Number(i.value)});
+ localStorage.setItem(key(),JSON.stringify(r));alert("Relatório salvo neste aparelho.");renderDash();
+}
+function total(q,r){return Object.values(r[q]||{}).reduce((a,b)=>a+(Number(b)||0),0)}
+function renderDash(){
+ const r=getReport(), ks=[["Alunos",1],["Presentes",2],["Estudo diário",4],["Batismos",10]];
+ kpis.innerHTML=ks.map(([l,q])=>`<div class="kpi"><span>${l}</span><b>${total(q,r)}</b></div>`).join("");
+ let vals=names.map(n=>[n,Number((r[2]||{})[n]||0)]), max=Math.max(1,...vals.map(x=>x[1]));
+ bars.innerHTML=vals.map(([n,v])=>`<div style="margin:12px 0"><div>${n}: <b>${v}</b></div><div class="bar"><i style="width:${v/max*100}%"></i></div></div>`).join("");
+}
+function renderNames(){namesDiv=document.getElementById("names");namesDiv.innerHTML=names.map((n,i)=>`<div class="item"><span>${n}</span><button class="secondary" onclick="renameName(${i})">✏️</button><button class="danger" onclick="deleteName(${i})">🗑️</button></div>`).join("")}
+function persistNames(){localStorage.setItem("es_names",JSON.stringify(names));renderNames()}
+function addName(){let n=newName.value.trim();if(n&&!names.includes(n)){names.push(n);newName.value="";persistNames()}}
+function renameName(i){let old=names[i],n=prompt("Novo nome:",old);if(!n||n.trim()===old)return;n=n.trim();names[i]=n;localStorage.setItem("es_names",JSON.stringify(names));persistNames()}
+function deleteName(i){if(confirm(`Excluir "${names[i]}" da lista? Os relatórios já salvos não serão apagados.`)){names.splice(i,1);persistNames()}}
+function renderHistory(){
+ let arr=[];for(let i=0;i<localStorage.length;i++){let k=localStorage.key(i);if(k.startsWith("es_report_")){let [_,__,y,m]=k.split("_");arr.push([y,m,k])}}
+ arr.sort((a,b)=>(b[0]+b[1].padStart(2,"0")).localeCompare(a[0]+a[1].padStart(2,"0")));
+ historyList.innerHTML=arr.length?arr.map(([y,m])=>`<div class="item"><span><b>${months[Number(m)-1]} ${y}</b></span><button class="secondary" onclick="openRep('${y}','${m}')">Abrir</button></div>`).join(""):"<p>Nenhum relatório salvo ainda.</p>"
+}
+function openRep(y,m){ano.value=y;mes.value=m;go("form")}
+async function shareSummary(){
+ let r=getReport(), text=`Relatório Escola Sabatina — ${months[mes.value-1]} ${ano.value}\nAlunos: ${total(1,r)}\nPresentes: ${total(2,r)}\nEstudo diário: ${total(4,r)}\nBatismos: ${total(10,r)}`;
+ if(navigator.share)await navigator.share({title:"Relatório Escola Sabatina",text});else prompt("Copie o resumo:",text)
+}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")}
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");
+</script>
+</body></html>
