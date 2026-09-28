@@ -17,10 +17,28 @@ input,select{width:100%;padding:12px;border:1px solid #ddd4e4;border-radius:12px
 .kpis{display:grid;grid-template-columns:1fr 1fr;gap:9px}.kpi{background:#eaf5ea;border-radius:15px;padding:13px}.kpi b{display:block;font-size:25px}
 .bar{height:10px;background:#eee;border-radius:10px;overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;background:var(--p)}
 nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;z-index:5}nav div{max-width:720px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr)}nav button{background:#fff;color:#625b67;border-radius:0;font-size:11px;padding:10px 2px}.hidden{display:none!important}
-@media print{header,nav,.no-print{display:none!important}main{padding:0}.card{box-shadow:none;border:1px solid #ddd}}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff;font-size:10pt}
+  header,nav,main>section:not(#printReport){display:none!important}
+  #printReport{display:block!important}
+  #printReport .card{box-shadow:none;border:0;padding:0;margin:0}
+  .print-title{text-align:center;margin-bottom:16px}
+  .print-title h1{font-size:18pt;margin:0 0 4px;color:#3f1f5d}
+  .print-title p{margin:2px 0}
+  .print-question{break-inside:avoid;border:1px solid #ddd;border-radius:8px;padding:10px;margin:0 0 10px}
+  .print-question h3{font-size:11pt;margin:0 0 7px;color:#3f1f5d}
+  .print-table{width:100%;border-collapse:collapse}
+  .print-table td{padding:4px 6px;border-bottom:1px solid #eee}
+  .print-table td:last-child{text-align:right;font-weight:700}
+  .print-total{margin-top:7px;text-align:right;font-weight:800}
+  .print-summary{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:12px 0 18px}
+  .print-kpi{border:1px solid #ddd;border-radius:7px;padding:8px}
+  .print-kpi b{display:block;font-size:14pt}
+}
 </style></head>
 <body>
-<header><h1>📖 Relatório Escola Sabatina</h1><div class="sub">Relatórios trimestrais • versão 3.1</div><button id="installBtn" class="install hidden" onclick="installApp()">📲 Instalar no celular</button></header>
+<header><h1>📖 Relatório Escola Sabatina</h1><div class="sub">Relatórios trimestrais • versão 3.2</div><button id="installBtn" class="install hidden" onclick="installApp()">📲 Instalar no celular</button></header>
 <main>
 <section id="home">
  <div class="card"><h2>Novo / editar relatório</h2><div class="grid"><select id="mes"></select><input id="ano" type="number" value="2026"></div><p class="note">Os dados ficam salvos neste aparelho.</p>
@@ -31,7 +49,8 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid 
 </section>
 
 <section id="form" class="hidden"><div class="card"><h2 id="formTitle"></h2><div id="formQuestions"></div><div class="actions no-print"><button class="primary" onclick="saveReport()">💾 Salvar</button><button class="secondary" onclick="go('dash')">📊 Dashboard</button></div></div></section>
-<section id="dash" class="hidden"><div class="card"><h2>📊 Dashboard</h2><div id="kpis" class="kpis"></div></div><div class="card"><h2>Presença por classe/unidade</h2><div id="bars"></div></div><div class="card no-print"><div class="actions"><button class="primary" onclick="window.print()">📄 Salvar em PDF</button><button class="secondary" onclick="shareSummary()">📤 Compartilhar</button></div></div></section>
+<section id="dash" class="hidden"><div class="card"><h2>📊 Dashboard</h2><div id="kpis" class="kpis"></div></div><div class="card"><h2>Presença por classe/unidade</h2><div id="bars"></div></div><div class="card no-print"><div class="actions"><button class="primary" onclick="printFullReport()">📄 Relatório completo em PDF</button><button class="secondary" onclick="shareFullReport()">📤 Compartilhar relatório</button></div></div></section>
+<section id="printReport" class="hidden"><div class="card"><div id="printReportContent"></div></div></section>
 <section id="history" class="hidden"><div class="card"><h2>📁 Histórico</h2><div id="historyList"></div></div></section>
 <section id="namesSec" class="hidden"><div class="card"><h2>👥 Classes e unidades</h2><p class="note">Adicione, edite ou exclua os nomes.</p><div id="namesList"></div><div class="row"><input id="newName" placeholder="Novo nome"><button class="primary" onclick="addName()">+ Adicionar</button></div></div></section>
 <section id="questionsSec" class="hidden"><div class="card"><h2>❓ Gerenciar perguntas</h2><p class="note">Você pode adicionar, editar e excluir qualquer pergunta.</p><div id="questionsList"></div><input id="newQuestion" placeholder="Digite uma nova pergunta"><div style="margin-top:9px"><button class="primary" onclick="addQuestion()">+ Adicionar pergunta</button></div></div></section>
@@ -64,7 +83,57 @@ function renderHistory(){let arr=[];for(let i=0;i<localStorage.length;i++){let k
 function openRep(y,m){ano.value=y;mes.value=m;go("form")}
 function exportBackup(){let data={app:"Relatório Escola Sabatina",version:"3.1",exportedAt:new Date().toISOString(),names,questions,reports:{}};for(let i=0;i<localStorage.length;i++){let k=localStorage.key(i);if(k.startsWith("es_report_"))data.reports[k]=JSON.parse(localStorage.getItem(k)||"{}")}let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=`backup-escola-sabatina-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 function restoreBackup(e){let f=e.target.files&&e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.names)||!Array.isArray(d.questions)||typeof d.reports!=="object")throw 0;if(!confirm("Restaurar este backup?"))return;names=d.names;questions=d.questions;localStorage.setItem("es_names",JSON.stringify(names));localStorage.setItem("es_questions",JSON.stringify(questions));Object.entries(d.reports).forEach(([k,v])=>{if(k.startsWith("es_report_"))localStorage.setItem(k,JSON.stringify(v))});alert("Backup restaurado com sucesso.");go("home")}catch(_){alert("Arquivo de backup inválido.")}finally{e.target.value=""}};r.readAsText(f)}
-async function shareSummary(){let r=getReport(),t=`Relatório Escola Sabatina — ${months[mes.value-1]} ${ano.value}\nAlunos: ${total(1,r)}\nPresentes: ${total(2,r)}\nEstudo diário: ${total(4,r)}\nBatismos: ${total(10,r)}`;if(navigator.share)await navigator.share({title:"Relatório Escola Sabatina",text:t});else prompt("Copie o resumo:",t)}
+function buildFullReportHTML(){
+  const r=getReport();
+  const summary=[
+    ["Alunos",total(1,r)],
+    ["Presentes",total(2,r)],
+    ["Estudo diário",total(4,r)],
+    ["Batismos",total(10,r)]
+  ];
+  return `
+    <div class="print-title">
+      <h1>RELATÓRIO TRIMESTRAL - ESCOLA SABATINA</h1>
+      <p><b>${months[mes.value-1]} de ${ano.value}</b></p>
+      <p>Relatório completo por classe/unidade</p>
+    </div>
+    <div class="print-summary">
+      ${summary.map(([l,v])=>`<div class="print-kpi">${safe(l)}<b>${v}</b></div>`).join("")}
+    </div>
+    ${questions.map((q,qi)=>{
+      const answers=r[qi]||{};
+      const rows=names.map(n=>`<tr><td>${safe(n)}</td><td>${Number(answers[n]||0)}</td></tr>`).join("");
+      return `<div class="print-question">
+        <h3>${qi+1}. ${safe(q)}</h3>
+        <table class="print-table"><tbody>${rows}</tbody></table>
+        <div class="print-total">Total: ${total(qi,r)}</div>
+      </div>`;
+    }).join("")}
+  `;
+}
+function buildFullReportText(){
+  const r=getReport();
+  let t=`RELATÓRIO TRIMESTRAL - ESCOLA SABATINA\n${months[mes.value-1]} de ${ano.value}\n\n`;
+  questions.forEach((q,qi)=>{
+    t+=`${qi+1}. ${q}\n`;
+    names.forEach(n=>{t+=`${n}: ${Number((r[qi]||{})[n]||0)}\n`;});
+    t+=`Total: ${total(qi,r)}\n\n`;
+  });
+  return t;
+}
+function printFullReport(){
+  printReportContent.innerHTML=buildFullReportHTML();
+  window.print();
+}
+async function shareFullReport(){
+  const text=buildFullReportText();
+  if(navigator.share){
+    try{await navigator.share({title:`Relatório Escola Sabatina - ${months[mes.value-1]} ${ano.value}`,text});}
+    catch(e){}
+  }else{
+    prompt("Copie o relatório completo:",text);
+  }
+}
 function safe(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
 if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js");
 </script></body></html>
