@@ -2,113 +2,89 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#512b75">
-<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#512b75"><link rel="manifest" href="manifest.webmanifest">
 <title>Relatório Escola Sabatina</title>
 <style>
 :root{--p:#512b75;--p2:#71469a;--bg:#f6f4f8;--card:#fff;--text:#29252d;--muted:#6d6671;--ok:#e8f5e9}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
-header{background:linear-gradient(135deg,var(--p),var(--p2));color:white;padding:22px 18px 18px;position:sticky;top:0;z-index:3}
-header h1{font-size:21px;margin:0}.sub{opacity:.9;font-size:13px;margin-top:4px}
-main{max-width:720px;margin:auto;padding:14px 14px 90px}.card{background:var(--card);border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 4px 18px #00000010}
-h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:16px 0 8px}
-button,.btn{border:0;border-radius:13px;padding:13px 14px;font-weight:700;font-size:15px;cursor:pointer}
-.primary{background:var(--p);color:white}.secondary{background:#eee8f3;color:var(--p)}.danger{background:#ffebee;color:#a21c2b}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;flex-wrap:wrap}
-input,select{width:100%;padding:12px;border:1px solid #ddd4e4;border-radius:12px;font-size:16px;background:white}
-.row{display:grid;grid-template-columns:1fr 105px;gap:10px;align-items:center;margin:9px 0}.row label{font-size:14px}
-.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kpi{background:var(--ok);border-radius:14px;padding:13px}.kpi b{font-size:24px;display:block}
-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #eee;display:flex;justify-content:center;z-index:4}
-nav div{max-width:720px;width:100%;display:grid;grid-template-columns:repeat(4,1fr)}
-nav button{background:white;color:#5f5863;border-radius:0;font-size:12px;padding:11px 3px}.hidden{display:none!important}
-.item{display:flex;gap:8px;align-items:center;border-bottom:1px solid #eee;padding:9px 0}.item span{flex:1}
-.note{font-size:12px;color:var(--muted)}.bar{height:10px;background:#eee;border-radius:10px;overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;background:var(--p)}
+header{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:20px 16px;position:sticky;top:0;z-index:3}
+header h1{font-size:20px;margin:0}.sub{opacity:.9;font-size:12px;margin-top:4px}main{max-width:720px;margin:auto;padding:14px 14px 92px}
+.card{background:#fff;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 4px 18px #00000010}h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:16px 0 8px}
+button{border:0;border-radius:13px;padding:12px 13px;font-weight:700;font-size:14px}.primary{background:var(--p);color:#fff}.secondary{background:#eee8f3;color:var(--p)}.danger{background:#ffebee;color:#a21c2b}
+.install{width:100%;background:#fff;color:var(--p);margin-top:12px;font-size:16px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+input,select{width:100%;padding:11px;border:1px solid #ddd4e4;border-radius:12px;font-size:16px;background:#fff}.row{display:grid;grid-template-columns:1fr 105px;gap:9px;align-items:center;margin:8px 0}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:9px}.kpi{background:var(--ok);border-radius:14px;padding:12px}.kpi b{font-size:24px;display:block}
+.item{display:flex;gap:7px;align-items:center;border-bottom:1px solid #eee;padding:9px 0}.item span{flex:1}.note{font-size:12px;color:var(--muted)}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;z-index:4}nav div{max-width:720px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr)}nav button{background:#fff;color:#5f5863;border-radius:0;font-size:11px;padding:9px 2px}.hidden{display:none!important}
+.bar{height:10px;background:#eee;border-radius:10px;overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;background:var(--p)}
 @media print{header,nav,.no-print{display:none}main{padding:0}.card{box-shadow:none;border:1px solid #ddd}}
-</style>
-</head>
+</style></head>
 <body>
-<header><h1>📖 Relatório Escola Sabatina</h1><div class="sub">Relatórios trimestrais • uso simples no celular</div></header>
+<header><h1>📖 Relatório Escola Sabatina</h1><div class="sub">Relatórios trimestrais</div><button id="installBtn" class="install hidden" onclick="installApp()">📲 Instalar no celular</button></header>
 <main>
-<section id="home">
- <div class="card"><h2>Novo / editar relatório</h2>
-  <div class="grid"><select id="mes"></select><input id="ano" type="number" value="2026"></div>
-  <p class="note">Os dados ficam salvos neste aparelho.</p>
-  <div class="actions"><button class="primary" onclick="go('form')">📝 Preencher relatório</button><button class="secondary" onclick="go('dash')">📊 Dashboard</button></div>
- </div>
- <div class="card"><h2>Atalhos</h2><div class="grid"><button class="secondary" onclick="go('history')">📁 Histórico</button><button class="secondary" onclick="go('settings')">⚙️ Nomes</button></div></div>
-</section>
+<section id="home"><div class="card"><h2>Relatório</h2><div class="grid"><select id="mes"></select><input id="ano" type="number" value="2026"></div>
+<p class="note">As informações ficam salvas neste aparelho.</p><div class="actions"><button class="primary" onclick="go('form')">📝 Preencher</button><button class="secondary" onclick="go('dash')">📊 Dashboard</button></div></div>
+<div class="card"><h2>Configuração</h2><div class="grid"><button class="secondary" onclick="go('namesSec')">👥 Nomes</button><button class="secondary" onclick="go('questionsSec')">❓ Perguntas</button></div>
+<h3>Backup e segurança</h3><div class="actions"><button class="secondary" onclick="exportBackup()">💾 Fazer backup</button><button class="secondary" onclick="document.getElementById('restoreFile').click()">📥 Restaurar backup</button><input id="restoreFile" class="hidden" type="file" accept=".json,application/json" onchange="restoreBackup(event)"></div>
+<p class="note">O backup guarda nomes, perguntas e todos os relatórios salvos neste aparelho.</p></div></section>
 
-<section id="form" class="hidden">
- <div class="card"><h2 id="formTitle">Relatório</h2><div id="questions"></div>
- <div class="actions no-print"><button class="primary" onclick="saveReport()">💾 Salvar</button><button class="secondary" onclick="go('dash')">📊 Dashboard</button></div></div>
-</section>
-
-<section id="dash" class="hidden">
- <div class="card"><h2>📊 Dashboard</h2><div id="kpis" class="kpis"></div></div>
- <div class="card"><h2>Presença por classe/unidade</h2><div id="bars"></div></div>
- <div class="card no-print"><div class="actions"><button class="primary" onclick="window.print()">📄 Gerar / salvar PDF</button><button class="secondary" onclick="shareSummary()">📤 Compartilhar resumo</button></div></div>
-</section>
-
-<section id="history" class="hidden"><div class="card"><h2>📁 Relatórios salvos</h2><div id="historyList"></div></div></section>
-
-<section id="settings" class="hidden"><div class="card"><h2>⚙️ Classes e unidades</h2><p class="note">Você pode editar, adicionar ou excluir os nomes.</p><div id="names"></div>
-<div class="row"><input id="newName" placeholder="Novo nome"><button class="primary" onclick="addName()">+ Adicionar</button></div></div></section>
+<section id="form" class="hidden"><div class="card"><h2 id="formTitle"></h2><div id="formQuestions"></div><div class="actions no-print"><button class="primary" onclick="saveReport()">💾 Salvar</button><button class="secondary" onclick="go('dash')">📊 Dashboard</button></div></div></section>
+<section id="dash" class="hidden"><div class="card"><h2>📊 Dashboard</h2><div id="kpis" class="kpis"></div></div><div class="card"><h2>Presença por classe/unidade</h2><div id="bars"></div></div><div class="card no-print"><div class="actions"><button class="primary" onclick="window.print()">📄 Salvar PDF</button><button class="secondary" onclick="shareSummary()">📤 Compartilhar</button></div></div></section>
+<section id="history" class="hidden"><div class="card"><h2>📁 Histórico</h2><div id="historyList"></div></div></section>
+<section id="namesSec" class="hidden"><div class="card"><h2>👥 Classes e unidades</h2><p class="note">Adicione, edite ou exclua nomes.</p><div id="namesList"></div><div class="row"><input id="newName" placeholder="Novo nome"><button class="primary" onclick="addName()">+ Adicionar</button></div></div></section>
+<section id="questionsSec" class="hidden"><div class="card"><h2>❓ Perguntas</h2><p class="note">As perguntas também são totalmente editáveis.</p><div id="questionsList"></div><input id="newQuestion" placeholder="Digite uma nova pergunta"><div style="margin-top:9px"><button class="primary" onclick="addQuestion()">+ Adicionar pergunta</button></div></div></section>
 </main>
-<nav><div><button onclick="go('home')">🏠<br>Início</button><button onclick="go('form')">📝<br>Relatório</button><button onclick="go('dash')">📊<br>Painel</button><button onclick="go('settings')">⚙️<br>Nomes</button></div></nav>
+<nav><div><button onclick="go('home')">🏠<br>Início</button><button onclick="go('form')">📝<br>Relatório</button><button onclick="go('dash')">📊<br>Painel</button><button onclick="go('history')">📁<br>Histórico</button><button onclick="go('questionsSec')">⚙️<br>Editar</button></div></nav>
 <script>
-const Q=[
-"1. Número de unidades de ação (classes)",
-"2. Número de alunos da Escola Sabatina",
-"3. Número de alunos presentes",
-"4. Pessoas que têm sua lição da Escola Sabatina",
-"5. Alunos que estudam diariamente a lição",
-"6. Pessoas que participam de pequeno grupo",
-"7. Visitas aos alunos e recém-chegados no trimestre",
-"8. Número de pequenos grupos",
-"9. Reuniões em pequenos grupos durante o trimestre",
-"10. Ações missionárias da unidade de ação no trimestre",
-"11. Pessoas levadas ao batismo por influência da unidade de ação",
-"12. Alunos que estão dando estudos bíblicos",
-"13. Pessoas que participam da Classe de Professores"
-];
-const initial=["Rol","Jardim","Primários","Adolescentes","Jovens","Altemar","Anderson","Gilmar","Luciana"];
-let names=JSON.parse(localStorage.getItem("es_names")||"null")||initial;
+const defaultQuestions=[
+"Número de unidades de ação (classes)","Número de alunos da Escola Sabatina","Número de alunos presentes","Pessoas que têm sua lição da Escola Sabatina","Alunos que estudam diariamente a lição","Pessoas que participam de pequeno grupo","Visitas aos alunos e recém-chegados no trimestre","Número de pequenos grupos","Reuniões em pequenos grupos durante o trimestre","Ações missionárias da unidade de ação no trimestre","Pessoas levadas ao batismo por influência da unidade de ação","Alunos que estão dando estudos bíblicos","Pessoas que participam da Classe de Professores (presencial ou virtual)"];
+const defaultNames=["Rol","Jardim","Primários","Adolescentes","Jovens","Altemar","Anderson","Gilmar","Luciana"];
+let names=JSON.parse(localStorage.getItem("es_names")||"null")||defaultNames;
+let questions=JSON.parse(localStorage.getItem("es_questions")||"null")||defaultQuestions;
 const months=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 mes.innerHTML=months.map((m,i)=>`<option value="${i+1}" ${i===7?"selected":""}>${m}</option>`).join("");
-function key(){return `es_report_${ano.value}_${mes.value}`}
-function getReport(){return JSON.parse(localStorage.getItem(key())||"{}")}
-function go(id){document.querySelectorAll("main section").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");if(id==="form")renderForm();if(id==="dash")renderDash();if(id==="settings")renderNames();if(id==="history")renderHistory();scrollTo(0,0)}
-function renderForm(){
- const r=getReport();formTitle.textContent=`${months[mes.value-1]} de ${ano.value}`;
- questions.innerHTML=Q.map((q,qi)=>`<div><h3>${q}</h3>${names.map(n=>`<div class="row"><label>${n}</label><input inputmode="numeric" type="number" min="0" data-q="${qi}" data-n="${esc(n)}" value="${(r[qi]&&r[qi][n])??""}" placeholder="0"></div>`).join("")}</div>`).join("");
-}
-function saveReport(){
- let r={};document.querySelectorAll("#questions input").forEach(i=>{let q=i.dataset.q,n=i.dataset.n;if(!r[q])r[q]={};if(i.value!=="")r[q][n]=Number(i.value)});
- localStorage.setItem(key(),JSON.stringify(r));alert("Relatório salvo neste aparelho.");renderDash();
-}
+let deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;installBtn.classList.remove("hidden")});
+window.addEventListener("appinstalled",()=>installBtn.classList.add("hidden"));
+async function installApp(){if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.classList.add("hidden")}else alert("No Chrome, abra o menu ⋮ e escolha “Instalar app” ou “Adicionar à tela inicial”.")}
+function key(){return `es_report_${ano.value}_${mes.value}`} function getReport(){return JSON.parse(localStorage.getItem(key())||"{}")}
+function go(id){document.querySelectorAll("main section").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");if(id==="form")renderForm();if(id==="dash")renderDash();if(id==="namesSec")renderNames();if(id==="questionsSec")renderQuestions();if(id==="history")renderHistory();scrollTo(0,0)}
+function renderForm(){let r=getReport();formTitle.textContent=`${months[mes.value-1]} de ${ano.value}`;formQuestions.innerHTML=questions.map((q,qi)=>`<div><h3>${qi+1}. ${safe(q)}</h3>${names.map(n=>`<div class="row"><label>${safe(n)}</label><input inputmode="numeric" type="number" min="0" data-q="${qi}" data-n="${safe(n)}" value="${(r[qi]&&r[qi][n])??""}" placeholder="0"></div>`).join("")}</div>`).join("")}
+function saveReport(){let r={};document.querySelectorAll("#formQuestions input").forEach(i=>{let q=i.dataset.q,n=i.dataset.n;if(!r[q])r[q]={};if(i.value!=="")r[q][n]=Number(i.value)});localStorage.setItem(key(),JSON.stringify(r));alert("Relatório salvo.");}
 function total(q,r){return Object.values(r[q]||{}).reduce((a,b)=>a+(Number(b)||0),0)}
-function renderDash(){
- const r=getReport(), ks=[["Alunos",1],["Presentes",2],["Estudo diário",4],["Batismos",10]];
- kpis.innerHTML=ks.map(([l,q])=>`<div class="kpi"><span>${l}</span><b>${total(q,r)}</b></div>`).join("");
- let vals=names.map(n=>[n,Number((r[2]||{})[n]||0)]), max=Math.max(1,...vals.map(x=>x[1]));
- bars.innerHTML=vals.map(([n,v])=>`<div style="margin:12px 0"><div>${n}: <b>${v}</b></div><div class="bar"><i style="width:${v/max*100}%"></i></div></div>`).join("");
-}
-function renderNames(){namesDiv=document.getElementById("names");namesDiv.innerHTML=names.map((n,i)=>`<div class="item"><span>${n}</span><button class="secondary" onclick="renameName(${i})">✏️</button><button class="danger" onclick="deleteName(${i})">🗑️</button></div>`).join("")}
-function persistNames(){localStorage.setItem("es_names",JSON.stringify(names));renderNames()}
-function addName(){let n=newName.value.trim();if(n&&!names.includes(n)){names.push(n);newName.value="";persistNames()}}
-function renameName(i){let old=names[i],n=prompt("Novo nome:",old);if(!n||n.trim()===old)return;n=n.trim();names[i]=n;localStorage.setItem("es_names",JSON.stringify(names));persistNames()}
-function deleteName(i){if(confirm(`Excluir "${names[i]}" da lista? Os relatórios já salvos não serão apagados.`)){names.splice(i,1);persistNames()}}
-function renderHistory(){
- let arr=[];for(let i=0;i<localStorage.length;i++){let k=localStorage.key(i);if(k.startsWith("es_report_")){let [_,__,y,m]=k.split("_");arr.push([y,m,k])}}
- arr.sort((a,b)=>(b[0]+b[1].padStart(2,"0")).localeCompare(a[0]+a[1].padStart(2,"0")));
- historyList.innerHTML=arr.length?arr.map(([y,m])=>`<div class="item"><span><b>${months[Number(m)-1]} ${y}</b></span><button class="secondary" onclick="openRep('${y}','${m}')">Abrir</button></div>`).join(""):"<p>Nenhum relatório salvo ainda.</p>"
-}
+function renderDash(){let r=getReport(),ks=[["Alunos",1],["Presentes",2],["Estudo diário",4],["Batismos",10]];kpis.innerHTML=ks.map(([l,q])=>`<div class="kpi"><span>${l}</span><b>${total(q,r)}</b></div>`).join("");let vals=names.map(n=>[n,Number((r[2]||{})[n]||0)]),max=Math.max(1,...vals.map(x=>x[1]));bars.innerHTML=vals.map(([n,v])=>`<div style="margin:12px 0"><div>${safe(n)}: <b>${v}</b></div><div class="bar"><i style="width:${v/max*100}%"></i></div></div>`).join("")}
+function renderNames(){namesList.innerHTML=names.map((n,i)=>`<div class="item"><span>${safe(n)}</span><button class="secondary" onclick="renameName(${i})">✏️</button><button class="danger" onclick="deleteName(${i})">🗑️</button></div>`).join("")}
+function saveNames(){localStorage.setItem("es_names",JSON.stringify(names));renderNames()}
+function addName(){let n=newName.value.trim();if(n&&!names.includes(n)){names.push(n);newName.value="";saveNames()}}
+function renameName(i){let n=prompt("Editar nome:",names[i]);if(n&&n.trim()){names[i]=n.trim();saveNames()}}
+function deleteName(i){if(confirm(`Excluir "${names[i]}"?`)){names.splice(i,1);saveNames()}}
+function renderQuestions(){questionsList.innerHTML=questions.map((q,i)=>`<div class="item"><span><b>${i+1}.</b> ${safe(q)}</span><button class="secondary" onclick="editQuestion(${i})">✏️</button><button class="danger" onclick="deleteQuestion(${i})">🗑️</button></div>`).join("")}
+function saveQuestions(){localStorage.setItem("es_questions",JSON.stringify(questions));renderQuestions()}
+function addQuestion(){let q=newQuestion.value.trim();if(q){questions.push(q);newQuestion.value="";saveQuestions()}}
+function editQuestion(i){let q=prompt("Editar pergunta:",questions[i]);if(q&&q.trim()){questions[i]=q.trim();saveQuestions()}}
+function deleteQuestion(i){if(confirm(`Excluir a pergunta ${i+1}?`)){questions.splice(i,1);saveQuestions()}}
+function renderHistory(){let arr=[];for(let i=0;i<localStorage.length;i++){let k=localStorage.key(i);if(k.startsWith("es_report_")){let a=k.split("_");arr.push([a[2],a[3]])}}arr.sort((a,b)=>(b[0]+b[1].padStart(2,"0")).localeCompare(a[0]+a[1].padStart(2,"0")));historyList.innerHTML=arr.length?arr.map(([y,m])=>`<div class="item"><span><b>${months[+m-1]} ${y}</b></span><button class="secondary" onclick="openRep('${y}','${m}')">Abrir</button></div>`).join(""):"<p>Nenhum relatório salvo.</p>"}
 function openRep(y,m){ano.value=y;mes.value=m;go("form")}
-async function shareSummary(){
- let r=getReport(), text=`Relatório Escola Sabatina — ${months[mes.value-1]} ${ano.value}\nAlunos: ${total(1,r)}\nPresentes: ${total(2,r)}\nEstudo diário: ${total(4,r)}\nBatismos: ${total(10,r)}`;
- if(navigator.share)await navigator.share({title:"Relatório Escola Sabatina",text});else prompt("Copie o resumo:",text)
+async function shareSummary(){let r=getReport(),t=`Relatório Escola Sabatina — ${months[mes.value-1]} ${ano.value}\nAlunos: ${total(1,r)}\nPresentes: ${total(2,r)}\nEstudo diário: ${total(4,r)}\nBatismos: ${total(10,r)}`;if(navigator.share)await navigator.share({title:"Relatório Escola Sabatina",text:t});else prompt("Copie:",t)}
+function exportBackup(){
+ const data={app:"Relatório Escola Sabatina",version:3,exportedAt:new Date().toISOString(),names,questions,reports:{}};
+ for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith("es_report_"))data.reports[k]=JSON.parse(localStorage.getItem(k)||"{}")}
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`backup-escola-sabatina-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
-function esc(s){return s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")}
-if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");
-</script>
-</body></html>
+function restoreBackup(ev){
+ const file=ev.target.files&&ev.target.files[0];if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{try{
+   const d=JSON.parse(reader.result);
+   if(!d||!Array.isArray(d.names)||!Array.isArray(d.questions)||typeof d.reports!=="object")throw new Error();
+   if(!confirm("Restaurar este backup? Os nomes e perguntas atuais serão substituídos."))return;
+   names=d.names;questions=d.questions;localStorage.setItem("es_names",JSON.stringify(names));localStorage.setItem("es_questions",JSON.stringify(questions));
+   Object.entries(d.reports).forEach(([k,v])=>{if(k.startsWith("es_report_"))localStorage.setItem(k,JSON.stringify(v))});
+   alert("Backup restaurado com sucesso.");go("home");
+ }catch(e){alert("Arquivo de backup inválido.")}finally{ev.target.value=""}};
+ reader.readAsText(file);
+}
+function safe(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js");
+</script></body></html>
