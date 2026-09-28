@@ -1,0 +1,10 @@
+{
+  "name": "Relatório Escola Sabatina",
+  "short_name": "Escola Sabatina",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f4f8",
+  "theme_color": "#512b75",
+  "description": "Relatórios trimestrais da Escola Sabatina"
+}
